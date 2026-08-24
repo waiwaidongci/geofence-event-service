@@ -1,0 +1,24 @@
+openapi: 3.0.3
+info:
+  title: Geofence Event Service
+  version: 1.0.0
+paths:
+  /healthz:
+    get: {responses: {'200': {description: Healthy}}}
+  /readyz:
+    get: {responses: {'200': {description: Ready}}}
+  /metrics:
+    get: {responses: {'200': {description: Prometheus metrics}}}
+  /api/v1/terminals:
+    post: {summary: Register terminal, responses: {'201': {description: Created}}}
+    get: {summary: List terminals, responses: {'200': {description: Terminal list}}}
+  /api/v1/geofences:
+    post: {summary: Create circle or polygon geofence, responses: {'201': {description: Created}}}
+    get: {summary: Filter geofences, responses: {'200': {description: Geofence list}}}
+  /api/v1/locations:
+    post: {summary: Report position and evaluate transitions, responses: {'202': {description: Accepted}}}
+  /api/v1/events:
+    get: {summary: Query geofence events, responses: {'200': {description: Event list}}}
+  /api/v1/subscriptions:
+    post: {summary: Register webhook subscription, responses: {'201': {description: Created}}}
+    get: {summary: List webhook subscriptions, responses: {'200': {description: Subscription list}}}
