@@ -1,0 +1,6 @@
+http_addr: ":8087"
+log_level: info
+dwell_seconds: 300
+shutdown_seconds: 10
+
+# Environment variables override these values at runtime.
