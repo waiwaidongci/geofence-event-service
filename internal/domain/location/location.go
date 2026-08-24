@@ -62,7 +62,7 @@ func New(id, terminalID string, point Point, accuracyM, speedMPS, heading float6
 		Heading:    heading,
 		ObservedAt: observedAt.UTC(),
 		ReceivedAt: receivedAt.UTC(),
-		Attributes: attributes,
+		Attributes: cloneMap(attributes),
 	}, nil
 }
 
@@ -93,5 +93,6 @@ func cloneMap(source map[string]string) map[string]string {
 }
 
 func Clone(value Location) Location {
+	value.Attributes = cloneMap(value.Attributes)
 	return value
 }

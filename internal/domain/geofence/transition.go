@@ -23,7 +23,16 @@ type State struct {
 }
 
 func (s State) Clone() State {
-	return s
+	clone := s
+	if s.EnteredAt != nil {
+		value := location.Clone(*s.EnteredAt)
+		clone.EnteredAt = &value
+	}
+	if s.LastLocation != nil {
+		value := location.Clone(*s.LastLocation)
+		clone.LastLocation = &value
+	}
+	return clone
 }
 
 func (s *State) Apply(current location.Location, inside bool, dwellSeconds int) []Transition {
@@ -33,7 +42,7 @@ func (s *State) Apply(current location.Location, inside bool, dwellSeconds int) 
 	}
 	if !s.Inside && inside {
 		transitions = append(transitions, TransitionEnter)
-		entered := current
+		entered := location.Clone(current)
 		s.EnteredAt = &entered
 		s.DwellSent = false
 	}
@@ -47,7 +56,7 @@ func (s *State) Apply(current location.Location, inside bool, dwellSeconds int) 
 		s.DwellSent = true
 	}
 	s.Inside = inside
-	last := current
+	last := location.Clone(current)
 	s.LastLocation = &last
 	return transitions
 }
