@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Geofence Operations</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <div>
+      <p class="eyebrow">Geofence Event Service</p>
+      <h1>Live operations</h1>
+    </div>
+    <div id="health" class="health"><span></span>Connecting</div>
+  </header>
+  <main>
+    <section class="summary" aria-label="Service summary">
+      <div><span>Terminals</span><strong id="terminalCount">-</strong></div>
+      <div><span>Geofences</span><strong id="geofenceCount">-</strong></div>
+      <div><span>Open events</span><strong id="eventCount">-</strong></div>
+    </section>
+    <section class="workspace">
+      <div class="map" aria-label="Geofence field preview">
+        <div class="grid"></div>
+        <div class="zone zone-a"><span>North yard</span></div>
+        <div class="zone zone-b"><span>Transfer bay</span></div>
+        <div class="terminal terminal-a" title="Terminal truck-01"></div>
+        <div class="terminal terminal-b" title="Terminal unit-17"></div>
+      </div>
+      <aside>
+        <div class="aside-head">
+          <h2>Recent events</h2>
+          <button id="refresh" type="button" title="Refresh events" aria-label="Refresh events">&#8635;</button>
+        </div>
+        <ol id="events"><li class="empty">Waiting for service data</li></ol>
+      </aside>
+    </section>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
