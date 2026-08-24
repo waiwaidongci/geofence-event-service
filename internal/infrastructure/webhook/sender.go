@@ -7,6 +7,7 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -29,7 +30,7 @@ func (s *Sender) Send(ctx context.Context, sub subscription.Subscription, e even
 	if err != nil {
 		return 0, err
 	}
-	req, err := http.NewRequestWithContext(context.Background(), http.MethodPost, sub.URL, bytes.NewReader(body))
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, sub.URL, bytes.NewReader(body))
 	if err != nil {
 		return 0, err
 	}
@@ -42,9 +43,16 @@ func (s *Sender) Send(ctx context.Context, sub subscription.Subscription, e even
 	}
 	res, err := s.Client.Do(req)
 	if err != nil {
-		return 0, fmt.Errorf("send webhook: %v", err)
+		return 0, fmt.Errorf("send webhook: %w", err)
 	}
-	io.CopyN(io.Discard, res.Body, s.MaxBody)
+	_, readErr := io.CopyN(io.Discard, res.Body, s.MaxBody)
+	if errors.Is(readErr, io.EOF) {
+		readErr = nil
+	}
+	closeErr := res.Body.Close()
+	if readErr != nil || closeErr != nil {
+		return res.StatusCode, errors.Join(readErr, closeErr)
+	}
 	if res.StatusCode < 200 || res.StatusCode >= 300 {
 		return res.StatusCode, fmt.Errorf("webhook returned status %d", res.StatusCode)
 	}

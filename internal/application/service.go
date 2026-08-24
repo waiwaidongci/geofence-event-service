@@ -201,7 +201,7 @@ func (s *Service) deliver(e event.Event, tags map[string]string) {
 		_ = s.repos.Deliveries.Create(ctx, delivery)
 		status, err := s.sender.Send(ctx, sub, e)
 		if err != nil {
-			delivery.MarkSent(status, s.clock.Now())
+			delivery.MarkFailed(err, status)
 		} else {
 			delivery.MarkSent(status, s.clock.Now())
 		}
