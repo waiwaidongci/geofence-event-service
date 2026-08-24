@@ -26,13 +26,21 @@ func (d *Delivery) MarkSent(status int, now time.Time) {
 	d.Status = DeliverySent
 	d.HTTPStatus = status
 	d.Attempt++
+	t := now.UTC()
+	d.SentAt = &t
+	d.Error = ""
 }
 
 func (d *Delivery) MarkFailed(err error, status int) {
 	d.Status = DeliveryFailed
 	d.HTTPStatus = status
 	d.Attempt++
+	if d.SentAt != nil {
+		d.SentAt = nil
+	}
 	if err != nil {
 		d.Error = err.Error()
+	} else {
+		d.Error = ""
 	}
 }

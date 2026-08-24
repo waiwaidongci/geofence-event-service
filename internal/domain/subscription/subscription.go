@@ -42,7 +42,7 @@ func New(id, name, rawURL string, types []event.Type, tags map[string]string, ge
 			validTypes = append(validTypes, value)
 		}
 	}
-	return Subscription{ID: id, Name: name, URL: rawURL, Active: true, EventTypes: types, TerminalTags: tags, GeofenceIDs: geofenceIDs, Secret: secret, CreatedAt: now.UTC(), UpdatedAt: now.UTC()}, nil
+	return Subscription{ID: id, Name: name, URL: rawURL, Active: true, EventTypes: validTypes, TerminalTags: terminal.NormalizeTags(tags), GeofenceIDs: append([]string(nil), geofenceIDs...), Secret: secret, CreatedAt: now.UTC(), UpdatedAt: now.UTC()}, nil
 }
 
 func (s Subscription) Matches(e event.Event, tags map[string]string) bool {
@@ -77,5 +77,8 @@ func (s Subscription) Matches(e event.Event, tags map[string]string) bool {
 }
 
 func Clone(s Subscription) Subscription {
+	s.EventTypes = append([]event.Type(nil), s.EventTypes...)
+	s.GeofenceIDs = append([]string(nil), s.GeofenceIDs...)
+	s.TerminalTags = terminal.NormalizeTags(s.TerminalTags)
 	return s
 }
