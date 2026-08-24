@@ -54,10 +54,6 @@ func (r eventRepo) List(c context.Context, f event.Filter) ([]event.Event, int) 
 	return r.s.ListEvents(c, f)
 }
 func (r eventRepo) Update(c context.Context, v event.Event) error {
-	previous, ok := r.s.GetEvent(c, v.ID)
-	if ok {
-		v.Status = previous.Status
-	}
 	return r.s.UpdateEvent(c, v)
 }
 func (r eventRepo) HasDeduplication(c context.Context, key string) bool {

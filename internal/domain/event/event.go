@@ -83,7 +83,7 @@ func (e *Event) Close(now time.Time) error {
 	}
 	t := now.UTC()
 	e.ClosedAt = &t
-	e.Status = StatusAck
+	e.Status = StatusClosed
 	return nil
 }
 
@@ -96,6 +96,10 @@ func Clone(e Event) Event {
 	if e.AcknowledgedAt != nil {
 		value := *e.AcknowledgedAt
 		e.AcknowledgedAt = &value
+	}
+	if e.ClosedAt != nil {
+		value := *e.ClosedAt
+		e.ClosedAt = &value
 	}
 	return e
 }
@@ -112,9 +116,6 @@ type Filter struct {
 }
 
 func (f Filter) Matches(e Event) bool {
-	if f.Status == StatusClosed && e.ClosedAt != nil {
-		return false
-	}
 	if f.TerminalID != "" && f.TerminalID != e.TerminalID {
 		return false
 	}
